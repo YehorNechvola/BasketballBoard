@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		741060DB29196918001B284D /* CombinationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741060DA29196918001B284D /* CombinationsViewModel.swift */; };
+		741060DD29196935001B284D /* CombinationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741060DC29196935001B284D /* CombinationsViewController.swift */; };
 		748EA92E291840F500BAB40C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748EA92D291840F500BAB40C /* AppDelegate.swift */; };
 		748EA930291840F500BAB40C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748EA92F291840F500BAB40C /* SceneDelegate.swift */; };
 		748EA937291840FC00BAB40C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 748EA936291840FC00BAB40C /* Assets.xcassets */; };
@@ -14,6 +16,11 @@
 		748EA945291840FD00BAB40C /* BasketballBoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748EA944291840FD00BAB40C /* BasketballBoardTests.swift */; };
 		748EA94F291840FD00BAB40C /* BasketballBoardUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748EA94E291840FD00BAB40C /* BasketballBoardUITests.swift */; };
 		748EA951291840FD00BAB40C /* BasketballBoardUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748EA950291840FD00BAB40C /* BasketballBoardUITestsLaunchTests.swift */; };
+		748EA96229184CDA00BAB40C /* BoardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748EA96129184CDA00BAB40C /* BoardViewModel.swift */; };
+		748EA96429184D4A00BAB40C /* BoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748EA96329184D4A00BAB40C /* BoardViewController.swift */; };
+		748EA9692918521500BAB40C /* AssemblyBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748EA9682918521500BAB40C /* AssemblyBuilder.swift */; };
+		748EA96B2918526100BAB40C /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748EA96A2918526100BAB40C /* Router.swift */; };
+		748EA96E2918607C00BAB40C /* SceneDelegate+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748EA96D2918607C00BAB40C /* SceneDelegate+extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		741060DA29196918001B284D /* CombinationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombinationsViewModel.swift; sourceTree = "<group>"; };
+		741060DC29196935001B284D /* CombinationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombinationsViewController.swift; sourceTree = "<group>"; };
 		748EA92A291840F500BAB40C /* BasketballBoard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BasketballBoard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		748EA92D291840F500BAB40C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		748EA92F291840F500BAB40C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -45,6 +54,11 @@
 		748EA94A291840FD00BAB40C /* BasketballBoardUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BasketballBoardUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		748EA94E291840FD00BAB40C /* BasketballBoardUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketballBoardUITests.swift; sourceTree = "<group>"; };
 		748EA950291840FD00BAB40C /* BasketballBoardUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketballBoardUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		748EA96129184CDA00BAB40C /* BoardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardViewModel.swift; sourceTree = "<group>"; };
+		748EA96329184D4A00BAB40C /* BoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardViewController.swift; sourceTree = "<group>"; };
+		748EA9682918521500BAB40C /* AssemblyBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssemblyBuilder.swift; sourceTree = "<group>"; };
+		748EA96A2918526100BAB40C /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		748EA96D2918607C00BAB40C /* SceneDelegate+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +86,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		741060D9291968E3001B284D /* CombinationsScreen */ = {
+			isa = PBXGroup;
+			children = (
+				741060DA29196918001B284D /* CombinationsViewModel.swift */,
+				741060DC29196935001B284D /* CombinationsViewController.swift */,
+			);
+			path = CombinationsScreen;
+			sourceTree = "<group>";
+		};
 		748EA921291840F500BAB40C = {
 			isa = PBXGroup;
 			children = (
@@ -95,8 +118,11 @@
 		748EA92C291840F500BAB40C /* BasketballBoard */ = {
 			isa = PBXGroup;
 			children = (
+				748EA96C2918605A00BAB40C /* Extensions */,
+				748EA965291851D400BAB40C /* Services */,
 				748EA95D291846A700BAB40C /* Base */,
 				748EA95E291847EB00BAB40C /* Resourses */,
+				748EA95F29184C7E00BAB40C /* Modules */,
 			);
 			path = BasketballBoard;
 			sourceTree = "<group>";
@@ -135,6 +161,57 @@
 				748EA93B291840FC00BAB40C /* Info.plist */,
 			);
 			path = Resourses;
+			sourceTree = "<group>";
+		};
+		748EA95F29184C7E00BAB40C /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				748EA96029184C8E00BAB40C /* BoardScreen */,
+				741060D9291968E3001B284D /* CombinationsScreen */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		748EA96029184C8E00BAB40C /* BoardScreen */ = {
+			isa = PBXGroup;
+			children = (
+				748EA96129184CDA00BAB40C /* BoardViewModel.swift */,
+				748EA96329184D4A00BAB40C /* BoardViewController.swift */,
+			);
+			path = BoardScreen;
+			sourceTree = "<group>";
+		};
+		748EA965291851D400BAB40C /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				748EA967291851F500BAB40C /* Router */,
+				748EA966291851E600BAB40C /* AssemblyBuilder */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		748EA966291851E600BAB40C /* AssemblyBuilder */ = {
+			isa = PBXGroup;
+			children = (
+				748EA9682918521500BAB40C /* AssemblyBuilder.swift */,
+			);
+			path = AssemblyBuilder;
+			sourceTree = "<group>";
+		};
+		748EA967291851F500BAB40C /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				748EA96A2918526100BAB40C /* Router.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		748EA96C2918605A00BAB40C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				748EA96D2918607C00BAB40C /* SceneDelegate+extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -267,8 +344,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				741060DB29196918001B284D /* CombinationsViewModel.swift in Sources */,
+				748EA96E2918607C00BAB40C /* SceneDelegate+extension.swift in Sources */,
 				748EA92E291840F500BAB40C /* AppDelegate.swift in Sources */,
 				748EA930291840F500BAB40C /* SceneDelegate.swift in Sources */,
+				748EA9692918521500BAB40C /* AssemblyBuilder.swift in Sources */,
+				748EA96229184CDA00BAB40C /* BoardViewModel.swift in Sources */,
+				748EA96B2918526100BAB40C /* Router.swift in Sources */,
+				741060DD29196935001B284D /* CombinationsViewController.swift in Sources */,
+				748EA96429184D4A00BAB40C /* BoardViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
