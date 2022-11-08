@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		741060DB29196918001B284D /* CombinationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741060DA29196918001B284D /* CombinationsViewModel.swift */; };
 		741060DD29196935001B284D /* CombinationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741060DC29196935001B284D /* CombinationsViewController.swift */; };
+		7450F9AA291ACC9F00F54F2A /* MovingViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7450F9A9291ACC9F00F54F2A /* MovingViews.swift */; };
+		7450F9AC291AF20900F54F2A /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7450F9AB291AF20900F54F2A /* UIView+Extension.swift */; };
 		748EA92E291840F500BAB40C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748EA92D291840F500BAB40C /* AppDelegate.swift */; };
 		748EA930291840F500BAB40C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 748EA92F291840F500BAB40C /* SceneDelegate.swift */; };
 		748EA937291840FC00BAB40C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 748EA936291840FC00BAB40C /* Assets.xcassets */; };
@@ -43,6 +45,8 @@
 /* Begin PBXFileReference section */
 		741060DA29196918001B284D /* CombinationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombinationsViewModel.swift; sourceTree = "<group>"; };
 		741060DC29196935001B284D /* CombinationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombinationsViewController.swift; sourceTree = "<group>"; };
+		7450F9A9291ACC9F00F54F2A /* MovingViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovingViews.swift; sourceTree = "<group>"; };
+		7450F9AB291AF20900F54F2A /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		748EA92A291840F500BAB40C /* BasketballBoard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BasketballBoard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		748EA92D291840F500BAB40C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		748EA92F291840F500BAB40C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -93,6 +97,14 @@
 				741060DC29196935001B284D /* CombinationsViewController.swift */,
 			);
 			path = CombinationsScreen;
+			sourceTree = "<group>";
+		};
+		7450F9A8291ACC5A00F54F2A /* MovingViews */ = {
+			isa = PBXGroup;
+			children = (
+				7450F9A9291ACC9F00F54F2A /* MovingViews.swift */,
+			);
+			path = MovingViews;
 			sourceTree = "<group>";
 		};
 		748EA921291840F500BAB40C = {
@@ -184,6 +196,7 @@
 		748EA965291851D400BAB40C /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				7450F9A8291ACC5A00F54F2A /* MovingViews */,
 				748EA967291851F500BAB40C /* Router */,
 				748EA966291851E600BAB40C /* AssemblyBuilder */,
 			);
@@ -210,6 +223,7 @@
 			isa = PBXGroup;
 			children = (
 				748EA96D2918607C00BAB40C /* SceneDelegate+extension.swift */,
+				7450F9AB291AF20900F54F2A /* UIView+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -344,6 +358,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7450F9AC291AF20900F54F2A /* UIView+Extension.swift in Sources */,
 				741060DB29196918001B284D /* CombinationsViewModel.swift in Sources */,
 				748EA96E2918607C00BAB40C /* SceneDelegate+extension.swift in Sources */,
 				748EA92E291840F500BAB40C /* AppDelegate.swift in Sources */,
@@ -352,6 +367,7 @@
 				748EA96229184CDA00BAB40C /* BoardViewModel.swift in Sources */,
 				748EA96B2918526100BAB40C /* Router.swift in Sources */,
 				741060DD29196935001B284D /* CombinationsViewController.swift in Sources */,
+				7450F9AA291ACC9F00F54F2A /* MovingViews.swift in Sources */,
 				748EA96429184D4A00BAB40C /* BoardViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

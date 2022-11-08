@@ -14,9 +14,10 @@ final class BoardViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = .brown
         setupBoard()
-
+        viewModel.placePlayersOnBoard(parentView: boardImageView)
     }
     
     private func setupBoard() {
