@@ -23,7 +23,7 @@ extension SceneDelegate {
         tabBarController.tabBar.backgroundColor = .brown
         tabBarController.viewControllers = navigationControllers
         tabBarController.tabBar.tintColor = .black
-        
+        UserDefaults.standard.set(tabBarController.tabBar.bounds.height, forKey: "tabBarHeight")
         
         mainNavigationController.viewControllers = [tabBarController]
         

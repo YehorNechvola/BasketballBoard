@@ -37,11 +37,14 @@ class Router: RouterProtocol {
          assemblyBuilder: AssemblyBuilderProtocol) {
         self.mainNavigationController = mainNavigationController
         self.boardNavigationController = navigationControllers[0]
+        boardNavigationController.isNavigationBarHidden = true
+        boardNavigationController.isToolbarHidden = true
+       
         self.combinationsNavigationController = navigationControllers[1]
         self.assemblyBuilder = assemblyBuilder
         
-        let boardTabBarItem = UITabBarItem(title: "BOARD", image: UIImage(named: "board"), tag: 0)
-        let combinationsTabBarItem = UITabBarItem(title: "COMBINATIONS", image: UIImage(named: "whistle"), tag: 1)
+        let boardTabBarItem = UITabBarItem(title: "Board", image: UIImage(named: "board"), tag: 0)
+        let combinationsTabBarItem = UITabBarItem(title: "Combinations", image: UIImage(named: "whistle"), tag: 1)
         boardNavigationController.tabBarItem = boardTabBarItem
         combinationsNavigationController.tabBarItem = combinationsTabBarItem
     }
