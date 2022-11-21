@@ -9,15 +9,18 @@ import UIKit
 
  class BoardViewController: UIViewController {
     
-    var viewModel: BoardViewModelProtocol!
-    var boardImageView: UIImageView!
-
+     var viewModel: BoardViewModelProtocol!
+     var boardImageView: UIImageView!
+     var animator: UIDynamicAnimator!
+     var collision: UICollisionBehavior!
+     var playersViews = [UIView]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .brown
         view.frame = UIScreen.main.bounds
+        
         setupBoard()
         addMovingPlayers()
         
@@ -25,6 +28,7 @@ import UIKit
      
     
     private func setupBoard() {
+        
         let bottomAnchorConstant = -(tabBarController?.tabBar.bounds.height ?? 40)
         boardImageView = UIImageView()
         boardImageView.backgroundColor = .orange
@@ -38,11 +42,15 @@ import UIKit
     }
     
     func addMovingPlayers() {
-        var playersViews = [UIView]()
+        
+        let ballImageView = UIImageView(frame: .init(x: 100, y: 100, width: 20, height: 20))
+        ballImageView.layer.cornerRadius = ballImageView.frame.width / 2
+        ballImageView.image = UIImage(named: "ball")
         
         
         for _ in 0...4 {
             let playerView = UIView()
+            
             playerView.backgroundColor = .blue
             playersViews.append(playerView)
             view.addSubview(playerView)
@@ -52,8 +60,12 @@ import UIKit
             gesture.minimumNumberOfTouches = 1
             gesture.maximumNumberOfTouches = 2
             playerView.addGestureRecognizer(gesture)
-            
         }
+        ballImageView.isUserInteractionEnabled = true
+        let gesture = UIPanGestureRecognizer(target: self, action: #selector(moveView(gesture:)))
+        ballImageView.addGestureRecognizer(gesture)
+        ballImageView.dropShadow()
+        view.addSubview(ballImageView)
         
         let width = BoardScreenConstants.playerWidth
         playersViews[0].frame = CGRect(x: 0, y: BoardScreenConstants.yPointFirstPlayer, width: width, height: width)
@@ -66,6 +78,12 @@ import UIKit
         playersViews[3].center.x = BoardScreenConstants.xPointFourthPlayer
         playersViews[4].frame = CGRect(x: 0, y: BoardScreenConstants.yPointFifthPlayer, width: width, height: width)
         playersViews[4].center.x = BoardScreenConstants.xPointFifthPlayer
+        
+        animator = UIDynamicAnimator(referenceView: self.view)
+        
+        collision = UICollisionBehavior(items: playersViews)
+        animator.addBehavior(collision)
+        
         playersViews.forEach { view in
             view.layer.cornerRadius = view.frame.width / 2
         }
@@ -77,5 +95,22 @@ import UIKit
         gestureView.center = CGPoint(x: gestureView.center.x + translation.x,
                                      y: gestureView.center.y + translation.y)
         gesture.setTranslation(.zero, in: view)
+        
+        if gestureView.center.x < 12.5 {
+            gestureView.center.x = 12.5
+        } else if gestureView.center.x > UIScreen.main.bounds.width - 12.5 {
+            gestureView.center.x = UIScreen.main.bounds.width - 12.5
+        }
+        
+        if gestureView.center.y < BoardScreenConstants.boardViewTopAnchor + 12.5 {
+            gestureView.center.y = BoardScreenConstants.boardViewTopAnchor + 12.5
+        } else if gestureView.center.y > UIScreen.main.bounds.height - (tabBarController?.tabBar.bounds.height)! - 12.5 {
+            gestureView.center.y = UIScreen.main.bounds.height - (tabBarController?.tabBar.bounds.height)! - 12.5
+        }
+        playersViews.forEach { [weak self] view in
+            self?.animator.updateItem(usingCurrentState: view)
+        }
     }
 }
+
+
