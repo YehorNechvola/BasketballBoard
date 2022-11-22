@@ -14,18 +14,17 @@ import UIKit
      var animator: UIDynamicAnimator!
      var collision: UICollisionBehavior!
      var playersViews = [UIView]()
+     var ballImageView: UIImageView!
+     var isIntersect = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .brown
-        view.frame = UIScreen.main.bounds
-        
         setupBoard()
         addMovingPlayers()
         
     }
-     
     
     private func setupBoard() {
         
@@ -43,11 +42,6 @@ import UIKit
     
     func addMovingPlayers() {
         
-        let ballImageView = UIImageView(frame: .init(x: 100, y: 100, width: 20, height: 20))
-        ballImageView.layer.cornerRadius = ballImageView.frame.width / 2
-        ballImageView.image = UIImage(named: "ball")
-        
-        
         for _ in 0...4 {
             let playerView = UIView()
             
@@ -61,11 +55,7 @@ import UIKit
             gesture.maximumNumberOfTouches = 2
             playerView.addGestureRecognizer(gesture)
         }
-        ballImageView.isUserInteractionEnabled = true
-        let gesture = UIPanGestureRecognizer(target: self, action: #selector(moveView(gesture:)))
-        ballImageView.addGestureRecognizer(gesture)
-        ballImageView.dropShadow()
-        view.addSubview(ballImageView)
+        
         
         let width = BoardScreenConstants.playerWidth
         playersViews[0].frame = CGRect(x: 0, y: BoardScreenConstants.yPointFirstPlayer, width: width, height: width)
@@ -82,16 +72,51 @@ import UIKit
         animator = UIDynamicAnimator(referenceView: self.view)
         
         collision = UICollisionBehavior(items: playersViews)
+        collision.translatesReferenceBoundsIntoBoundary = true
+        collision.addBoundary(withIdentifier: "bottomBoundary" as NSCopying, from: .init(x: 0,
+                                                                                         y: UIScreen.main.bounds.height - (tabBarController?.tabBar.bounds.height ?? 40)),
+                              to: .init(x: UIScreen.main.bounds.width,
+                                        y: UIScreen.main.bounds.height - (tabBarController?.tabBar.bounds.height ?? 40)))
+        collision.addBoundary(withIdentifier: "topBoundary" as NSCopying, from: .init(x: 0, y: BoardScreenConstants.boardViewTopAnchor),
+                              to: .init(x: UIScreen.main.bounds.width, y: BoardScreenConstants.boardViewTopAnchor))
+        
         animator.addBehavior(collision)
         
         playersViews.forEach { view in
             view.layer.cornerRadius = view.frame.width / 2
         }
+        
+        ballImageView = UIImageView(frame: .init(x: 0, y: 0, width: 20, height: 20))
+        let point = CGPoint(x: playersViews[0].frame.midX + 13, y: playersViews[0].frame.midY - 15)
+        ballImageView.center = point
+        ballImageView.layer.cornerRadius = ballImageView.frame.width / 2
+        ballImageView.image = UIImage(named: "ball")
+        ballImageView.isUserInteractionEnabled = true
+        let gesture = UIPanGestureRecognizer(target: self, action: #selector(moveBall(gesture:)))
+        ballImageView.addGestureRecognizer(gesture)
+        ballImageView.dropShadow()
+        view.addSubview(ballImageView)
     }
     
     @objc func moveView(gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: view)
         guard let gestureView = gesture.view else { return }
+        
+        if gestureView.frame.intersects(ballImageView.frame) {
+            isIntersect = true
+        }
+        
+        if isIntersect {
+            ballImageView.center.x = gestureView.center.x + 13
+            ballImageView.center.y = gestureView.center.y - 15
+        }
+        switch gesture.state {
+        case .cancelled, .ended, .failed:
+            isIntersect = false
+        default: break
+        }
+        
+        
         gestureView.center = CGPoint(x: gestureView.center.x + translation.x,
                                      y: gestureView.center.y + translation.y)
         gesture.setTranslation(.zero, in: view)
@@ -107,10 +132,29 @@ import UIKit
         } else if gestureView.center.y > UIScreen.main.bounds.height - (tabBarController?.tabBar.bounds.height)! - 12.5 {
             gestureView.center.y = UIScreen.main.bounds.height - (tabBarController?.tabBar.bounds.height)! - 12.5
         }
-        playersViews.forEach { [weak self] view in
-            self?.animator.updateItem(usingCurrentState: view)
-        }
+        animator.updateItem(usingCurrentState: gestureView)
     }
-}
-
+     
+     @objc func moveBall(gesture: UIPanGestureRecognizer) {
+         isIntersect = false
+         
+         let translation = gesture.translation(in: view)
+         guard let gestureView = gesture.view else { return }
+         gestureView.center = CGPoint(x: gestureView.center.x + translation.x,
+                                      y: gestureView.center.y + translation.y)
+         gesture.setTranslation(.zero, in: view)
+         
+         if gestureView.center.x < 12.5 {
+             gestureView.center.x = 12.5
+         } else if gestureView.center.x > UIScreen.main.bounds.width - 12.5 {
+             gestureView.center.x = UIScreen.main.bounds.width - 12.5
+         }
+         
+         if gestureView.center.y < BoardScreenConstants.boardViewTopAnchor + 12.5 {
+             gestureView.center.y = BoardScreenConstants.boardViewTopAnchor + 12.5
+         } else if gestureView.center.y > UIScreen.main.bounds.height - (tabBarController?.tabBar.bounds.height)! - 12.5 {
+             gestureView.center.y = UIScreen.main.bounds.height - (tabBarController?.tabBar.bounds.height)! - 12.5
+         }
+     }
+ }
 
