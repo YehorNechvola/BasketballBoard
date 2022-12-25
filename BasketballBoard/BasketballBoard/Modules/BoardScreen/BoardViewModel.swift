@@ -9,13 +9,10 @@ import Foundation
 
 protocol BoardViewModelProtocol {
     
-    func saveCoordinatesOfPlayer()
+    
 }
 
 class BoardViewModel: BoardViewModelProtocol {
     
     
-    func saveCoordinatesOfPlayer() {
-    
-    }
 }

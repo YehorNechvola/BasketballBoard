@@ -20,15 +20,15 @@ class AssemblyBuilder: AssemblyBuilderProtocol {
     
     func createBoardModule() -> BoardViewController {
         let viewModel = BoardViewModel()
-        let view = BoardViewController()
-        view.viewModel = viewModel
-        return view
+        let viewController = BoardViewController()
+        viewController.viewModel = viewModel
+        return viewController
     }
     
     func createCombinationsModule(router: RouterProtocol) -> CombinationsViewController {
         let viewModel = CombinationsViewModel(router: router)
-        let view = CombinationsViewController()
-        view.viewModel = viewModel
-        return view
+        let viewController = CombinationsViewController()
+        viewController.viewModel = viewModel
+        return viewController
     }
 }
