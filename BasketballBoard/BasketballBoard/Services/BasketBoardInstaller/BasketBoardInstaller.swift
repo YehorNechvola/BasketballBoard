@@ -28,6 +28,7 @@ class BasketBoardInstaller: BasketBoardInstallerProtocol {
     var playersViews = [UIView]()
     var ballImageView: UIImageView!
     var isIntersect = false
+    var rotationAngle: Double = 180
     
     init(view: UIView, tabBarController: UITabBarController) {
         self.view = view
@@ -168,7 +169,8 @@ class BasketBoardInstaller: BasketBoardInstallerProtocol {
     func shootBall() {
         let xPoint = UIScreen.main.bounds.width * 0.5
         let yPoint = UIScreen.main.bounds.height * 0.194
-        let radians = CGFloat(180 * Double.pi / 180)
+        let radians = CGFloat(rotationAngle / 180 * Double.pi)
+        rotationAngle == 360 ? (rotationAngle = 180) : (rotationAngle += 180)
         
         UIView.animate(withDuration: 1) { [weak self] in
             self?.ballImageView.center = CGPoint(x: xPoint , y: yPoint)
@@ -197,11 +199,9 @@ class BasketBoardInstaller: BasketBoardInstallerProtocol {
                                                  y: BoardScreenConstants.yPointFirstPlayer - 15)
             
         } completion: { [weak self] _ in
-            self?.playersViews[0].removeFromSuperview()
-            self?.playersViews[1].removeFromSuperview()
-            self?.playersViews[2].removeFromSuperview()
-            self?.playersViews[3].removeFromSuperview()
-            self?.playersViews[4].removeFromSuperview()
+            self?.playersViews.forEach({ playerView in
+                playerView.removeFromSuperview()
+            })
             self?.playersViews = []
             self?.addMovingPlayers()
             self?.makeCollisionOnPlayersViews()
