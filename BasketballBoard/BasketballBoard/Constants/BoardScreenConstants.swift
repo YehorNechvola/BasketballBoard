@@ -8,7 +8,7 @@
 import UIKit
 
 enum BoardScreenConstants {
-    static let boardViewTopAnchor = UIScreen.main.bounds.height * 0.125
+    static let boardViewTopAnchor = UIScreen.main.bounds.height * 0.11
     static let boardHeight = (UIScreen.main.bounds.height * 0.875) - (UserDefaults.standard.value(forKey: "tabBarHeight") as! CGFloat)
     static let playerWidth: CGFloat = 25
     

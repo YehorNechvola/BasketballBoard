@@ -168,7 +168,7 @@ class BasketBoardInstaller: BasketBoardInstallerProtocol {
     
     func shootBall() {
         let xPoint = UIScreen.main.bounds.width * 0.5
-        let yPoint = UIScreen.main.bounds.height * 0.194
+        let yPoint = UIScreen.main.bounds.height * 0.18
         let radians = CGFloat(rotationAngle / 180 * Double.pi)
         rotationAngle == 360 ? (rotationAngle = 180) : (rotationAngle += 180)
         

@@ -16,7 +16,7 @@ import UIKit
         super.viewDidLoad()
         
         setBaskletballBoard()
-        setButtons()
+        setBarButtonItems()
     }
      
      private func setBaskletballBoard() {
@@ -40,6 +40,14 @@ import UIKit
          pointButton.setTitle("Point", for: .normal)
          pointButton.addTarget(self, action: #selector(setPointButtonPressed), for: .touchUpInside)
          view.addSubview(pointButton)
+     }
+     
+     private func setBarButtonItems() {
+         let shootButton = UIBarButtonItem(title: "Shoot", style: .done, target: self, action: #selector(shootButtonPressed))
+         let startOverButton = UIBarButtonItem(title: "StartOver", style: .done, target: self, action: #selector(setPointButtonPressed))
+         
+         navigationItem.leftBarButtonItems = [shootButton, startOverButton]
+         navigationItem.leftBarButtonItems?.forEach{ $0.tintColor = .orange }
      }
      
      @objc private func shootButtonPressed() {
