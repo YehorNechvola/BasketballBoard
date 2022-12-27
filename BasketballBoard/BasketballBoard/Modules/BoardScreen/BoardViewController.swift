@@ -45,8 +45,12 @@ import UIKit
      private func setBarButtonItems() {
          let shootButton = UIBarButtonItem(title: "Shoot", style: .done, target: self, action: #selector(shootButtonPressed))
          let startOverButton = UIBarButtonItem(title: "StartOver", style: .done, target: self, action: #selector(setPointButtonPressed))
+         let defendersButton = UIBarButtonItem(title: "Defenders", style: .done, target: self, action: #selector(defendersButtonPressed))
+         let saveButton = UIBarButtonItem(title: "Save", style: .done, target: self, action: nil)
+         saveButton.tintColor = .label
          
-         navigationItem.leftBarButtonItems = [shootButton, startOverButton]
+         navigationItem.leftBarButtonItems = [shootButton, startOverButton, defendersButton]
+         navigationItem.rightBarButtonItem = saveButton
          navigationItem.leftBarButtonItems?.forEach{ $0.tintColor = .orange }
      }
      
@@ -56,6 +60,10 @@ import UIKit
      
      @objc private func setPointButtonPressed() {
          basketBoardInstaller.setPlayersToOriginPoints()
+     }
+     
+     @objc private func defendersButtonPressed() {
+         basketBoardInstaller.addDefendingPlayers()
      }
  }
 
