@@ -7,15 +7,20 @@
 
 import UIKit
 
+enum StateOfDefenders {
+    case isHidden
+    case isShowed
+    case isShowing
+    case isHiding
+}
+
 //MARK: - BasketBoardInstallerProtocol
 
 protocol BasketBoardInstallerProtocol {
-    var view: UIView { get set }
-    var tabBarController: UITabBarController { get set }
     func setupBoard()
     func addMovingPlayers()
-    func addDefendingPlayers()
-    func hideDefendingPlayers()
+    func showOrHideDefenders()
+    func setDefendersToOriginPoint()
     func addBallView()
     func makeCollisionOnPlayersViews()
     func shootBall()
@@ -26,15 +31,16 @@ class BasketBoardInstaller: BasketBoardInstallerProtocol {
     
     //MARK: - Properties
     
-    var view: UIView
-    var tabBarController: UITabBarController
-    var boardImageView: UIImageView!
-    var attackingPlayers = [UIView]()
-    var defendingPlayers = [UIView]()
+    private var view: UIView
+    private var tabBarController: UITabBarController
+    private var boardImageView: UIImageView!
+    private var attackingPlayers = [UIView]()
+    private var defendingPlayers = [UIView]()
     private var animator: UIDynamicAnimator!
     private var ballImageView: UIImageView!
     private var isIntersectBallWithPlayer = false
-    private var isHiddenDefenders = true
+    private var isBallShooted = false
+    private var stateOfDefenders: StateOfDefenders = .isHidden
     private var rotationAngle: Double = 180
     
     // MARK: - Init
@@ -60,6 +66,7 @@ class BasketBoardInstaller: BasketBoardInstallerProtocol {
     }
     
     func addMovingPlayers() {
+        
         for _ in 0...4 {
             let playerView = UIView()
             playerView.backgroundColor = .blue
@@ -97,11 +104,8 @@ class BasketBoardInstaller: BasketBoardInstallerProtocol {
         attackingPlayers.forEach { $0.layer.cornerRadius = $0.frame.width / 2 }
     }
     
-    func addDefendingPlayers() {
-        guard isHiddenDefenders else {
-            hideDefendingPlayers()
-            return
-        }
+    private func addDefendingPlayers() {
+        stateOfDefenders = .isShowing
         
         for _ in 0...4 {
             let playerView = UIView()
@@ -137,18 +141,15 @@ class BasketBoardInstaller: BasketBoardInstallerProtocol {
                                              y: UIScreen.main.bounds.midY)
         
         defendingPlayers.forEach { $0.layer.cornerRadius = $0.frame.width / 2 }
-        
-        dropDefendingPlayers()
     }
     
-    func dropDefendingPlayers() {
-        isHiddenDefenders = false
+    private func dropDefendingPlayers() {
         
-        UIView.animate(withDuration: 1) {
+        UIView.animate(withDuration: 0.7) {
             self.defendingPlayers.forEach { $0.center = CGPoint(x: BoardScreenConstants.xPointFirstPlayer,
                                                                 y: BoardScreenConstants.yPointFirstPlayer - 45) }
         } completion: { _ in
-            UIView.animate(withDuration: 0.75) {
+            UIView.animate(withDuration: 0.5) {
                 self.defendingPlayers[1].center = CGPoint(x: BoardScreenConstants.xPointSecondPlayer + 35,
                                                           y: BoardScreenConstants.yPointSecondPlayer - 20)
                 
@@ -161,11 +162,12 @@ class BasketBoardInstaller: BasketBoardInstallerProtocol {
                 self.defendingPlayers[4].center = CGPoint(x: BoardScreenConstants.xPointFifthPlayer - 35,
                                                           y: BoardScreenConstants.yPointFifthPlayer)
             }
+            self.stateOfDefenders = .isShowed
         }
     }
     
-    func hideDefendingPlayers() {
-        isHiddenDefenders = true
+    private func hideDefendingPlayers() {
+        stateOfDefenders = .isHiding
         
         UIView.animate(withDuration: 0.8) {
             self.defendingPlayers.forEach {
@@ -175,6 +177,19 @@ class BasketBoardInstaller: BasketBoardInstallerProtocol {
         } completion: { _ in
             self.defendingPlayers.forEach { $0.removeFromSuperview() }
             self.defendingPlayers = []
+            self.stateOfDefenders = .isHidden
+        }
+    }
+    
+    func showOrHideDefenders() {
+        switch stateOfDefenders {
+        case .isHidden:
+            addDefendingPlayers()
+            dropDefendingPlayers()
+        case .isShowed:
+            hideDefendingPlayers()
+        case .isShowing, .isHiding:
+            return
         }
     }
     
@@ -212,6 +227,7 @@ class BasketBoardInstaller: BasketBoardInstallerProtocol {
         
         if gestureView.frame.intersects(ballImageView.frame) {
             isIntersectBallWithPlayer = true
+            isBallShooted = false
         }
         
         if isIntersectBallWithPlayer {
@@ -256,6 +272,9 @@ class BasketBoardInstaller: BasketBoardInstallerProtocol {
     }
     
     func shootBall() {
+        guard !isBallShooted else { return }
+        isBallShooted = true
+        
         let xPoint = UIScreen.main.bounds.width * 0.5
         let yPoint = UIScreen.main.bounds.height * 0.18
         let radians = CGFloat(rotationAngle / 180 * Double.pi)
@@ -288,10 +307,33 @@ class BasketBoardInstaller: BasketBoardInstallerProtocol {
                                                  y: BoardScreenConstants.yPointFirstPlayer - 15)
             
         } completion: { [weak self] _ in
+            self?.isBallShooted = false
             self?.attackingPlayers.forEach{ $0.removeFromSuperview() }
             self?.attackingPlayers = []
             self?.addMovingPlayers()
             self?.makeCollisionOnPlayersViews()
+        }
+    }
+    
+    func setDefendersToOriginPoint() {
+        guard stateOfDefenders == .isShowed else { return }
+        
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            
+            self?.defendingPlayers[0].center = CGPoint(x: BoardScreenConstants.xPointFirstPlayer,
+                                                       y: BoardScreenConstants.yPointFirstPlayer - 45)
+            
+            self?.defendingPlayers[1].center = CGPoint(x: BoardScreenConstants.xPointSecondPlayer + 35,
+                                                      y: BoardScreenConstants.yPointSecondPlayer - 20)
+            
+            self?.defendingPlayers[2].center = CGPoint(x: BoardScreenConstants.xPointThirdPlayer - 35,
+                                                      y: BoardScreenConstants.yPointThirdPlayer - 20)
+            
+            self?.defendingPlayers[3].center = CGPoint(x: BoardScreenConstants.xPointFourthPlayer + 35,
+                                                      y: BoardScreenConstants.yPointFourthPlayer)
+            
+            self?.defendingPlayers[4].center = CGPoint(x: BoardScreenConstants.xPointFifthPlayer - 35,
+                                                      y: BoardScreenConstants.yPointFifthPlayer)
         }
     }
 }
