@@ -7,10 +7,10 @@
 
 import UIKit
 
- class BoardViewController: UIViewController {
+final class BoardViewController: UIViewController {
     
-     var viewModel: BoardViewModelProtocol!
-     var basketBoardInstaller: BasketBoardInstallerProtocol!
+    var viewModel: BoardViewModelProtocol!
+    var basketBoardInstaller: BasketBoardInstallerProtocol!
     
     override func viewDidLoad() {
         super.viewDidLoad()
