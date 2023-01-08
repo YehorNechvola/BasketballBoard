@@ -30,6 +30,8 @@ enum BoardScreenConstants {
 }
 
 enum BoardScreenImages {
+    static let boardImage = UIImage(named: "basketBoard")
+    static let ballImage = UIImage(named: "ball")
     static let pointGuardImage = UIImage(named: "numberOne")
     static let shootingGuardImage = UIImage(named: "numberTwo")
     static let smallForwardImage = UIImage(named: "numberThree")

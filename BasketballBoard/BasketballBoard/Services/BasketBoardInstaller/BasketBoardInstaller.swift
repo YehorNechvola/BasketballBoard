@@ -34,9 +34,10 @@ final class BasketBoardInstaller: BasketBoardInstallerProtocol {
     private var view: UIView
     private var tabBarController: UITabBarController
     private var boardImageView: UIImageView!
-    private var attackingPlayers = [UIView]()
-    private var defendingPlayers = [UIView]()
+    private var attackingPlayers = [UIImageView]()
+    private var defendingPlayers = [UIImageView]()
     private var animator: UIDynamicAnimator!
+    private var collisionBehavior: UICollisionBehavior!
     private var ballImageView: UIImageView!
     private var isIntersectBallWithPlayer = false
     private var isBallShooted = false
@@ -56,7 +57,7 @@ final class BasketBoardInstaller: BasketBoardInstallerProtocol {
         let bottomAnchorConstant = -(tabBarController.tabBar.bounds.height)
         boardImageView = UIImageView()
         boardImageView.backgroundColor = .orange
-        boardImageView.image = UIImage(named: "basketBoard")
+        boardImageView.image = BoardScreenImages.boardImage
         view.addSubview(boardImageView)
         boardImageView.translatesAutoresizingMaskIntoConstraints = false
         boardImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: BoardScreenConstants.boardViewTopAnchor).isActive = true
@@ -120,7 +121,8 @@ final class BasketBoardInstaller: BasketBoardInstallerProtocol {
         stateOfDefenders = .isShowing
         
         for _ in 0...4 {
-            let playerView = UIView()
+            let playerView = UIImageView()
+            playerView.isUserInteractionEnabled = true
             playerView.backgroundColor = .red
             defendingPlayers.append(playerView)
             view.addSubview(playerView)
@@ -148,10 +150,10 @@ final class BasketBoardInstaller: BasketBoardInstallerProtocol {
         defendingPlayers[4].center = CGPoint(x: -32, y: UIScreen.main.bounds.midY)
         
         defendingPlayers.forEach { $0.layer.cornerRadius = $0.frame.width / 2 }
-        
     }
     
     private func dropDefendingPlayers() {
+        animator.removeAllBehaviors()
         
         UIView.animate(withDuration: 0.7) {
             self.defendingPlayers.forEach { $0.center = BoardScreenConstants.pointFirstDefender }
@@ -163,6 +165,7 @@ final class BasketBoardInstaller: BasketBoardInstallerProtocol {
                 self.defendingPlayers[4].center = BoardScreenConstants.pointFifthDefender
             }
             self.stateOfDefenders = .isShowed
+            self.makeCollisionOnPlayersViews()
         }
     }
     
@@ -197,7 +200,7 @@ final class BasketBoardInstaller: BasketBoardInstallerProtocol {
         ballImageView = UIImageView(frame: .init(x: 0, y: 0, width: 20, height: 20))
         ballImageView.center = BoardScreenConstants.pointBallImageView
         ballImageView.layer.cornerRadius = ballImageView.frame.width / 2
-        ballImageView.image = UIImage(named: "ball")
+        ballImageView.image = BoardScreenImages.ballImage
         ballImageView.isUserInteractionEnabled = true
         let gesture = UIPanGestureRecognizer(target: self, action: #selector(moveBall(gesture:)))
         ballImageView.addGestureRecognizer(gesture)
@@ -208,19 +211,20 @@ final class BasketBoardInstaller: BasketBoardInstallerProtocol {
     func makeCollisionOnPlayersViews() {
         animator = UIDynamicAnimator(referenceView: view)
         
-        let collision = UICollisionBehavior(items: attackingPlayers)
-        collision.translatesReferenceBoundsIntoBoundary = true
-        collision.addBoundary(withIdentifier: "bottomBoundary" as NSCopying, from: .init(x: 0,
+        collisionBehavior = UICollisionBehavior(items: attackingPlayers + defendingPlayers)
+        collisionBehavior.translatesReferenceBoundsIntoBoundary = true
+        collisionBehavior.addBoundary(withIdentifier: "bottomBoundary" as NSCopying, from: .init(x: 0,
                                                                                          y: UIScreen.main.bounds.height - (tabBarController.tabBar.bounds.height)),
                               to: .init(x: UIScreen.main.bounds.width,
                                         y: UIScreen.main.bounds.height - (tabBarController.tabBar.bounds.height)))
-        collision.addBoundary(withIdentifier: "topBoundary" as NSCopying, from: .init(x: 0, y: BoardScreenConstants.boardViewTopAnchor),
+        
+        collisionBehavior.addBoundary(withIdentifier: "topBoundary" as NSCopying, from: .init(x: 0, y: BoardScreenConstants.boardViewTopAnchor),
                               to: .init(x: UIScreen.main.bounds.width, y: BoardScreenConstants.boardViewTopAnchor))
-        collision.action = {
+        collisionBehavior.action = {
             self.attackingPlayers.forEach { $0.transform = CGAffineTransform.identity }
         }
     
-        animator.addBehavior(collision)
+        animator.addBehavior(collisionBehavior)
     }
     
     @objc private func moveView(gesture: UIPanGestureRecognizer) {
@@ -231,6 +235,7 @@ final class BasketBoardInstaller: BasketBoardInstallerProtocol {
             isIntersectBallWithPlayer = true
             isBallShooted = false
         }
+        
         
         if isIntersectBallWithPlayer {
             ballImageView.center.x = gestureView.center.x + 13
@@ -302,6 +307,7 @@ final class BasketBoardInstaller: BasketBoardInstallerProtocol {
             self.attackingPlayers = []
             self.addMovingPlayers()
             self.makeCollisionOnPlayersViews()
+            self.view.bringSubviewToFront(self.ballImageView)
         }
     }
     
