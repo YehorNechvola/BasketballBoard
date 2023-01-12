@@ -10,24 +10,27 @@ import UIKit
 enum StateOfDefenders {
     case isHidden
     case isShowed
-    case isShowing
     case isHiding
+}
+
+enum TypeOfPlayer {
+    case attacking
+    case defending
 }
 
 //MARK: - BasketBoardInstallerProtocol
 
 protocol BasketBoardInstallerProtocol {
     func setupBoard()
-    func addMovingPlayers()
+    func addPlayer(type: TypeOfPlayer, backgroundColor: UIColor)
     func showOrHideDefenders()
-    func setDefendersToOriginPoint()
     func addBallView()
     func makeCollisionOnPlayersViews()
     func shootBall()
     func setPlayersToOriginPoints()
 }
 
-final class BasketBoardInstaller: BasketBoardInstallerProtocol {
+ class BasketBoardInstaller: BasketBoardInstallerProtocol {
     
     //MARK: - Properties
     
@@ -65,139 +68,78 @@ final class BasketBoardInstaller: BasketBoardInstallerProtocol {
         boardImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         boardImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     }
-    
-    func addMovingPlayers() {
+
+    func addPlayer(type: TypeOfPlayer, backgroundColor: UIColor) {
         var index = 0
         for _ in 0...4 {
             let playerView = UIImageView()
-            
             playerView.contentMode = .scaleAspectFill
-            playerView.backgroundColor = .white
-            
+            playerView.backgroundColor = backgroundColor
             playerView.dropShadow()
+            playerView.frame = CGRect(x: 0, y: 0, width: BoardScreenConstants.playerWidth, height: BoardScreenConstants.playerWidth)
+            playerView.layer.cornerRadius = BoardScreenConstants.playerWidth / 2
             
-            switch index {
-            case 0: playerView.image = BoardScreenImages.pointGuardImage
-            case 1: playerView.image = BoardScreenImages.shootingGuardImage
-            case 2: playerView.image = BoardScreenImages.smallForwardImage
-            case 3: playerView.image = BoardScreenImages.powerForwardImage
-            case 4: playerView.image = BoardScreenImages.centerImage
-            default: break
+            playerView.isUserInteractionEnabled = true
+            let gesture = UIPanGestureRecognizer(target: self, action: #selector(moveView(gesture:)))
+            gesture.minimumNumberOfTouches = 1
+            gesture.maximumNumberOfTouches = 2
+            playerView.addGestureRecognizer(gesture)
+            
+            switch type {
+            case .attacking:
+                playerView.image = BoardScreenImages.attackingPlayersImages[index]
+                playerView.image = playerView.image?.withTintColor(.blue)
+                playerView.center = BoardScreenConstants.attackingPlayersCoordinates[index]
+                attackingPlayers.append(playerView)
+            case .defending:
+                playerView.alpha = 0
+                playerView.center = BoardScreenConstants.defendingPlayersCoordinates[index]
+                defendingPlayers.append(playerView)
             }
-            
-            playerView.image = playerView.image?.withTintColor(.blue)
+            view.addSubview(playerView)
+        
             index += 1
-            
-            attackingPlayers.append(playerView)
-            view.addSubview(playerView)
-            
-            playerView.isUserInteractionEnabled = true
-            let gesture = UIPanGestureRecognizer(target: self, action: #selector(moveView(gesture:)))
-            gesture.minimumNumberOfTouches = 1
-            gesture.maximumNumberOfTouches = 2
-            playerView.addGestureRecognizer(gesture)
-        }
-        
-        let width = BoardScreenConstants.playerWidth
-        attackingPlayers[0].frame = CGRect(x: 0, y: 0, width: width, height: width)
-        attackingPlayers[0].center = BoardScreenConstants.pointFirstPlayer
-        
-        attackingPlayers[1].frame = CGRect(x: 0, y: 0, width: width, height: width)
-        attackingPlayers[1].center = BoardScreenConstants.pointSecondPlayer
-        
-        attackingPlayers[2].frame = CGRect(x: 0, y: 0, width: width, height: width)
-        attackingPlayers[2].center = BoardScreenConstants.pointThirdPlayer
-        
-        attackingPlayers[3].frame = CGRect(x: 0, y: 0, width: width, height: width)
-        attackingPlayers[3].center = BoardScreenConstants.pointFourthPlayer
-        
-        attackingPlayers[4].frame = CGRect(x: 0, y: 0, width: width, height: width)
-        attackingPlayers[4].center = BoardScreenConstants.pointFifthPlayer
-        
-        attackingPlayers.forEach { $0.layer.cornerRadius = $0.frame.width / 2 }
-    }
-    
-    private func addDefendingPlayers() {
-        stateOfDefenders = .isShowing
-        
-        for _ in 0...4 {
-            let playerView = UIImageView()
-            playerView.isUserInteractionEnabled = true
-            playerView.backgroundColor = .red
-            defendingPlayers.append(playerView)
-            view.addSubview(playerView)
-            playerView.dropShadow()
-            
-            let gesture = UIPanGestureRecognizer(target: self, action: #selector(moveView(gesture:)))
-            gesture.minimumNumberOfTouches = 1
-            gesture.maximumNumberOfTouches = 2
-            playerView.addGestureRecognizer(gesture)
-        }
-        
-        defendingPlayers[0].frame = CGRect(x: 0, y: 0, width: 25, height: 25)
-        defendingPlayers[0].center = CGPoint(x: -32, y: UIScreen.main.bounds.midY)
-        
-        defendingPlayers[1].frame = CGRect(x: 0, y: 0, width: 25, height: 25)
-        defendingPlayers[1].center = CGPoint(x: -32, y: UIScreen.main.bounds.midY)
-        
-        defendingPlayers[2].frame = CGRect(x: 0, y: 0, width: 25, height: 25)
-        defendingPlayers[2].center = CGPoint(x: -32, y: UIScreen.main.bounds.midY)
-        
-        defendingPlayers[3].frame = CGRect(x: 0, y: 0, width: 25, height: 25)
-        defendingPlayers[3].center = CGPoint(x: -32, y: UIScreen.main.bounds.midY)
-        
-        defendingPlayers[4].frame = CGRect(x: 0, y: 0, width: 25, height: 25)
-        defendingPlayers[4].center = CGPoint(x: -32, y: UIScreen.main.bounds.midY)
-        
-        defendingPlayers.forEach { $0.layer.cornerRadius = $0.frame.width / 2 }
-    }
-    
-    private func dropDefendingPlayers() {
-        animator.removeAllBehaviors()
-        
-        UIView.animate(withDuration: 0.7) {
-            self.defendingPlayers.forEach { $0.center = BoardScreenConstants.pointFirstDefender }
-        } completion: { _ in
-            UIView.animate(withDuration: 0.5) {
-                self.defendingPlayers[1].center = BoardScreenConstants.pointSecondDefender
-                self.defendingPlayers[2].center = BoardScreenConstants.pointThirdDefender
-                self.defendingPlayers[3].center = BoardScreenConstants.pointFourthDefender
-                self.defendingPlayers[4].center = BoardScreenConstants.pointFifthDefender
-            }
-            self.stateOfDefenders = .isShowed
-            self.makeCollisionOnPlayersViews()
         }
     }
+     
+     func showDefendingPlayers() {
+         defendingPlayers.forEach { view in
+             UIView.animate(withDuration: 0.5) {
+                 view.alpha = 1
+             }
+         }
+     }
     
-    private func hideDefendingPlayers() {
+    func hideDefendingPlayers() {
         stateOfDefenders = .isHiding
-        
-        UIView.animate(withDuration: 0.8) {
-            self.defendingPlayers.forEach {
-                $0.backgroundColor = .black
-                $0.alpha = 0
+        defendingPlayers.forEach { view in
+            UIView.animate(withDuration: 0.5) {
+                view.backgroundColor = .black
+                view.alpha = 0
+            } completion: { _ in
+                view.removeFromSuperview()
             }
-        } completion: { _ in
-            self.defendingPlayers.forEach { $0.removeFromSuperview() }
-            self.defendingPlayers = []
-            self.stateOfDefenders = .isHidden
         }
+        defendingPlayers = []
     }
     
     func showOrHideDefenders() {
         switch stateOfDefenders {
         case .isHidden:
-            addDefendingPlayers()
-            dropDefendingPlayers()
+            addPlayer(type: .defending, backgroundColor: .red)
+            showDefendingPlayers()
+            makeCollisionOnPlayersViews()
+            stateOfDefenders = .isShowed
         case .isShowed:
             hideDefendingPlayers()
-        case .isShowing, .isHiding:
+            stateOfDefenders = .isHidden
+        case .isHiding:
             return
         }
     }
     
     func addBallView() {
-        ballImageView = UIImageView(frame: .init(x: 0, y: 0, width: 20, height: 20))
+        ballImageView = UIImageView(frame: .init(x: 0, y: 0, width: BoardScreenConstants.ballWidth, height: BoardScreenConstants.ballWidth))
         ballImageView.center = BoardScreenConstants.pointBallImageView
         ballImageView.layer.cornerRadius = ballImageView.frame.width / 2
         ballImageView.image = BoardScreenImages.ballImage
@@ -292,34 +234,6 @@ final class BasketBoardInstaller: BasketBoardInstallerProtocol {
     }
     
     func setPlayersToOriginPoints() {
-        UIView.animate(withDuration: 0.5) {
-            
-            self.attackingPlayers[0].center = BoardScreenConstants.pointFirstPlayer
-            self.attackingPlayers[1].center = BoardScreenConstants.pointSecondPlayer
-            self.attackingPlayers[2].center = BoardScreenConstants.pointThirdPlayer
-            self.attackingPlayers[3].center = BoardScreenConstants.pointFourthPlayer
-            self.attackingPlayers[4].center = BoardScreenConstants.pointFifthPlayer
-            self.ballImageView.center = BoardScreenConstants.pointBallImageView
-            
-        } completion: { _ in
-            self.isBallShooted = false
-            self.attackingPlayers.forEach{ $0.removeFromSuperview() }
-            self.attackingPlayers = []
-            self.addMovingPlayers()
-            self.makeCollisionOnPlayersViews()
-            self.view.bringSubviewToFront(self.ballImageView)
-        }
-    }
-    
-    func setDefendersToOriginPoint() {
-        guard stateOfDefenders == .isShowed else { return }
         
-        UIView.animate(withDuration: 0.5) {
-            self.defendingPlayers[0].center = BoardScreenConstants.pointFirstDefender
-            self.defendingPlayers[1].center = BoardScreenConstants.pointSecondDefender
-            self.defendingPlayers[2].center = BoardScreenConstants.pointThirdDefender
-            self.defendingPlayers[3].center = BoardScreenConstants.pointFourthDefender
-            self.defendingPlayers[4].center = BoardScreenConstants.pointFifthDefender
-        }
     }
 }

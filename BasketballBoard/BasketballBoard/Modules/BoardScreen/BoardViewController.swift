@@ -17,13 +17,15 @@ final class BoardViewController: UIViewController {
         
         setBaskletballBoard()
         setBarButtonItems()
+        
     }
      
      private func setBaskletballBoard() {
          view.backgroundColor = .brown
          basketBoardInstaller = BasketBoardInstaller(view: view, tabBarController: tabBarController!)
          basketBoardInstaller.setupBoard()
-         basketBoardInstaller.addMovingPlayers()
+         basketBoardInstaller.addPlayer(type: .attacking, backgroundColor: .white)
+         
          basketBoardInstaller.makeCollisionOnPlayersViews()
          basketBoardInstaller.addBallView()
      }
@@ -46,7 +48,6 @@ final class BoardViewController: UIViewController {
      
      @objc private func setPointButtonPressed() {
          basketBoardInstaller.setPlayersToOriginPoints()
-         basketBoardInstaller.setDefendersToOriginPoint()
      }
      
      @objc private func defendButtonPressed() {
